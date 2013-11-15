@@ -13,6 +13,20 @@ sub new {
 
 	$args{api_login_id} or croak "api_login_id is required.";
 
+	# Set some human readable fields
+    my %map = (
+        'avs_response' => 'x_avs_code',
+        'authorization_code' => 'x_auth_code',
+        'transaction_id' => 'x_trans_id',
+        'customer_id' => 'x_cust_id',
+        'md5_hash' => 'x_MD5_Hash',
+        'card_code_response' => 'x_cvv2_resp_code',
+        'cavv_response' => 'x_cavv_response',
+    );
+    foreach my $key (keys %map) {
+    	$args{$key} = $args{ $map{$key} } if exists $args{ $map{$key} }; # alias
+    }
+
 	return bless \%args, $class;
 }
 

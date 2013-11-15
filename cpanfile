@@ -1,6 +1,7 @@
 requires 'perl', '5.008005';
 
-# requires 'Some::Module', 'VERSION';
+requires 'Digest::MD5';
+requires 'Digest::HMAC';
 
 on test => sub {
     requires 'Test::More', '0.88';

@@ -13,6 +13,13 @@ sub new {
 
 	$args{api_login_id} or croak "api_login_id is required.";
 
+	foreach my $key (keys %args) {
+		if ($key =~ /^x_/) {
+			my $nk = substr($key, 2);
+			$args{$nk} = $args{$key};
+		}
+	}
+
 	# Set some human readable fields
     my %map = (
         'avs_response' => 'x_avs_code',
@@ -28,6 +35,23 @@ sub new {
     }
 
 	return bless \%args, $class;
+}
+
+sub is_approved {
+	my $self = shift;
+	return ($self->{response_code} and $self->{response_code} == 1);
+}
+sub is_declined {
+	my $self = shift;
+	return ($self->{response_code} and $self->{response_code} == 2);
+}
+sub is_error {
+	my $self = shift;
+	return ($self->{response_code} and $self->{response_code} == 3);
+}
+sub is_held {
+	my $self = shift;
+	return ($self->{response_code} and $self->{response_code} == 4);
 }
 
 sub isAuthorizeNet {

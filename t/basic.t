@@ -28,6 +28,18 @@ $sim = Business::AuthorizeNet::SIM->new(
 );
 ok(! $sim->isAuthorizeNet());
 
+$sim = Business::AuthorizeNet::SIM->new(
+	amount => '4.12',
+	x_response_code => '3',
+	x_ship_to_state => 'CA',
+	api_login_id => '528udYYwz',
+	md5_settings => 'test',
+);
+is($sim->{response_code}, 3);
+ok($sim->is_error());
+ok(! $sim->is_approved());
+is($sim->{ship_to_state}, 'CA');
+
 is( $sim->getFingerprint("123","123","123","123","123"), 'db88bbebb8f699acdbe70daad897a68a' );
 
 done_testing;

@@ -8,19 +8,19 @@ use Digest::MD5  qw(md5 md5_hex);
 use Digest::HMAC qw(hmac);
 
 sub new {
-	my $class = shift;
-	my %args = (@_ % 2) ? %{$_[0]} : @_;
+    my $class = shift;
+    my %args = (@_ % 2) ? %{$_[0]} : @_;
 
-	$args{api_login_id} or croak "api_login_id is required.";
+    $args{api_login_id} or croak "api_login_id is required.";
 
-	foreach my $key (keys %args) {
-		if ($key =~ /^x_/) {
-			my $nk = substr($key, 2);
-			$args{$nk} = $args{$key};
-		}
-	}
+    foreach my $key (keys %args) {
+        if ($key =~ /^x_/) {
+            my $nk = substr($key, 2);
+            $args{$nk} = $args{$key};
+        }
+    }
 
-	# Set some human readable fields
+    # Set some human readable fields
     my %map = (
         'avs_response' => 'x_avs_code',
         'authorization_code' => 'x_auth_code',
@@ -31,46 +31,46 @@ sub new {
         'cavv_response' => 'x_cavv_response',
     );
     foreach my $key (keys %map) {
-    	$args{$key} = $args{ $map{$key} } if exists $args{ $map{$key} }; # alias
+        $args{$key} = $args{ $map{$key} } if exists $args{ $map{$key} }; # alias
     }
 
-	return bless \%args, $class;
+    return bless \%args, $class;
 }
 
 sub is_approved {
-	my $self = shift;
-	return ($self->{response_code} and $self->{response_code} == 1);
+    my $self = shift;
+    return ($self->{response_code} and $self->{response_code} == 1);
 }
 sub is_declined {
-	my $self = shift;
-	return ($self->{response_code} and $self->{response_code} == 2);
+    my $self = shift;
+    return ($self->{response_code} and $self->{response_code} == 2);
 }
 sub is_error {
-	my $self = shift;
-	return ($self->{response_code} and $self->{response_code} == 3);
+    my $self = shift;
+    return ($self->{response_code} and $self->{response_code} == 3);
 }
 sub is_held {
-	my $self = shift;
-	return ($self->{response_code} and $self->{response_code} == 4);
+    my $self = shift;
+    return ($self->{response_code} and $self->{response_code} == 4);
 }
 
 sub isAuthorizeNet {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	return ($self->{md5_hash} && ($self->generateHash() eq $self->{md5_hash}));
+    return ($self->{md5_hash} && ($self->generateHash() eq $self->{md5_hash}));
 }
 
 sub generateHash {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	my $amount = $self->{amount} ? $self->{amount} : '0.00';
-	return uc(md5_hex($self->{md5_settings}, $self->{api_login_id}, $self->{transaction_id} . $self->{amount}));
+    my $amount = $self->{amount} ? $self->{amount} : '0.00';
+    return uc(md5_hex($self->{md5_settings}, $self->{api_login_id}, $self->{transaction_id} . $self->{amount}));
 }
 
 sub getFingerprint {
-	my ($self, $api_login_id, $transaction_key, $amount, $fp_sequence, $fp_timestamp) = @_;
+    my ($self, $api_login_id, $transaction_key, $amount, $fp_sequence, $fp_timestamp) = @_;
 
-	return hmac_md5_hex($api_login_id . "^" . $fp_sequence . "^" . $fp_timestamp . "^" . $amount . "^", $transaction_key);
+    return hmac_md5_hex($api_login_id . "^" . $fp_sequence . "^" . $fp_timestamp . "^" . $amount . "^", $transaction_key);
 }
 
 sub hmac_md5_hex {

@@ -1,5 +1,5 @@
 {
-   "abstract" : "Blah blah blah",
+   "abstract" : "AUthorize.Net SIM",
    "author" : [
       "Fayland Lam <fayland@gmail.com>"
    ],
@@ -36,6 +36,8 @@
       },
       "runtime" : {
          "requires" : {
+            "Digest::HMAC" : "0",
+            "Digest::MD5" : "0",
             "perl" : "5.008005"
          }
       },
@@ -46,6 +48,17 @@
       }
    },
    "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/fayland/perl-Business-AuthorizeNet-SIM/issues"
+      },
+      "homepage" : "https://github.com/fayland/perl-Business-AuthorizeNet-SIM",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/fayland/perl-Business-AuthorizeNet-SIM.git",
+         "web" : "https://github.com/fayland/perl-Business-AuthorizeNet-SIM"
+      }
+   },
    "version" : "0.01"
 }
 
